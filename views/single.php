@@ -14,15 +14,15 @@ if ( !defined('ABSPATH') ) { die('-1'); }
 	$gmt_offset = (get_option('gmt_offset') >= '0' ) ? ' +' . get_option('gmt_offset') : " " . get_option('gmt_offset');
  	$gmt_offset = str_replace( array( '.25', '.5', '.75' ), array( ':15', ':30', ':45' ), $gmt_offset );
  	if (strtotime( tribe_get_end_date(get_the_ID(), false, 'Y-m-d G:i') . $gmt_offset ) <= time() ) { ?><div class="event-passed"><?php  _e('This event has passed.', 'tribe-events-calendar'); ?></div><?php } ?>
-<div id="tribe-events-event-meta" itemscope itemtype="http://schema.org/Event">
+<div id="tribe-events-event-meta" class="<?php $terms = get_the_terms(get_the_ID(), 'tribe_events_cat'); $count = count($terms); if ( $count > 0 ){ foreach ( $terms as $term ) { echo $term->slug; } } ?>" itemscope itemtype="http://schema.org/Event">
 	<dl class="column">
 		<dt class="event-label event-label-name"><?php _e('Event:', 'tribe-events-calendar'); ?></dt>
 		<dd itemprop="name" class="event-meta event-meta-name"><span class="summary"><?php the_title(); ?></span></dd>
 		<?php if (tribe_get_start_date() !== tribe_get_end_date() ) { ?>
 			<dt class="event-label event-label-start"><?php _e('Start:', 'tribe-events-calendar'); ?></dt> 
 			<dd class="event-meta event-meta-start"><meta itemprop="startDate" content="<?php echo tribe_get_start_date( null, false, 'Y-m-d-h:i:s' ); ?>"/><?php echo tribe_get_start_date(); ?></dd>
-			<dt class="event-label event-label-end"><?php _e('End:', 'tribe-events-calendar'); ?></dt>
-			<dd class="event-meta event-meta-end"><meta itemprop="endDate" content="<?php echo tribe_get_end_date( null, false, 'Y-m-d-h:i:s' ); ?>"/><?php echo tribe_get_end_date(); ?></dd>						
+			<!--<dt class="event-label event-label-end"><?php _e('End:', 'tribe-events-calendar'); ?></dt>-->
+			<!--dd class="event-meta event-meta-end"><meta itemprop="endDate" content="<?php echo tribe_get_end_date( null, false, 'Y-m-d-h:i:s' ); ?>"/><?php echo tribe_get_end_date(); ?></dd-->						
 		<?php } else { ?>
 			<dt class="event-label event-label-date"><?php _e('Date:', 'tribe-events-calendar'); ?></dt> 
 			<dd class="event-meta event-meta-date"><meta itemprop="startDate" content="<?php echo tribe_get_start_date( null, false, 'Y-m-d-h:i:s' ); ?>"/><?php echo tribe_get_start_date(); ?></dd>

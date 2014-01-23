@@ -15,8 +15,10 @@ if ( !defined('ABSPATH') ) { die('-1'); }
 	<?php if(!tribe_is_day()): // day view doesn't have a grid ?>
 		<div id='tribe-events-calendar-header' class="clearfix">
 		<span class='tribe-events-calendar-buttons'> 
-			<a class='tribe-events-button-on' href='<?php echo tribe_get_listview_link(); ?>'><?php _e('Event List', 'tribe-events-calendar'); ?></a>
-			<a class='tribe-events-button-off' href='<?php echo tribe_get_gridview_link(); ?>'><?php _e('Calendar', 'tribe-events-calendar'); ?></a>
+		  <a class="tribe-events-button-on" href="/events/categoria/partecipazioni/">Eventi a cui partecipo</a>
+		  <a class="tribe-events-button-on" href="/events/categoria/consigliati/">Eventi consigliati</a>
+			<!--<a class='tribe-events-button-on' href='<?php echo tribe_get_listview_link(); ?>'><?php _e('Event List', 'tribe-events-calendar'); ?></a>
+			<a class='tribe-events-button-off' href='<?php echo tribe_get_gridview_link(); ?>'><?php _e('Calendar', 'tribe-events-calendar'); ?></a>-->
 		</span>
 
 		</div><!--tribe-events-calendar-header-->
@@ -27,12 +29,13 @@ if ( !defined('ABSPATH') ) { die('-1'); }
 	<?php $hasPosts = true; $first = true; ?>
 	<?php while ( have_posts() ) : the_post(); ?>
 		<?php global $more; $more = false; ?>
-		<div id="post-<?php the_ID(); ?>" <?php post_class('tribe-events-event clearfix'); ?> itemscope itemtype="http://schema.org/Event">
+		<div id="post-<?php the_ID(); ?>" <?php post_class('tribe-events-event clearfix');
+		$terms = get_the_terms(get_the_ID(), 'tribe_events_cat'); $count = count($terms); if ( $count > 0 ){ foreach ( $terms as $term ) { echo $term->slug; } } ?> itemscope itemtype="http://schema.org/Event">
 			<?php if ( tribe_is_new_event_day() && !tribe_is_day() && !tribe_is_multiday() ) : ?>
 				<h4 class="event-day"><?php echo tribe_get_start_date( null, false ); ?></h4>
 			<?php endif; ?>
 			<?php if( !tribe_is_day() && tribe_is_multiday() ) : ?>
-				<h4 class="event-day"><?php echo tribe_get_start_date( null, false ); ?> – <?php echo tribe_get_end_date( null, false ); ?></h4>
+				<h4 class="event-day"><?php echo tribe_get_start_date( null, false ); ?><!-- – <?php echo tribe_get_end_date( null, false ); ?>--></h4>
 			<?php endif; ?>
 			<?php if ( tribe_is_day() && $first ) : $first = false; ?>
 				<h4 class="event-day"><?php echo tribe_event_format_date(strtotime(get_query_var('eventDate')), false); ?></h4>
@@ -53,17 +56,19 @@ if ( !defined('ABSPATH') ) { die('-1'); }
 						<td class="tribe-events-event-meta-desc"><?php _e('Start:', 'tribe-events-calendar'); ?></td>
 						<td class="tribe-events-event-meta-value" itemprop="startDate" content="<?php echo tribe_get_start_date(); ?>"><?php echo tribe_get_start_date(); ?></td>
 					</tr>
-					<tr>
+					<!--<tr>
 						<td class="tribe-events-event-meta-desc"><?php _e('End:', 'tribe-events-calendar'); ?></td>
 						<td class="tribe-events-event-meta-value" itemprop="endDate" content="<?php echo tribe_get_end_date(); ?>"><?php echo tribe_get_end_date(); ?></td>
-					</tr>
+					</tr>-->
 					<?php else: ?>
 					<tr>
 						<td class="tribe-events-event-meta-desc"><?php _e('Date:', 'tribe-events-calendar'); ?></td>
 						<td class="tribe-events-event-meta-value" itemprop="startDate" content="<?php echo tribe_get_start_date(); ?>"><?php echo tribe_get_start_date(); ?></td>
 					</tr>
 					<?php endif; ?>
-
+					<tr>
+  					<?php tribe_meta_event_cats(); ?>
+					</tr>
 					<?php
 						$venue = tribe_get_venue();
 						if ( !empty( $venue ) ) :
